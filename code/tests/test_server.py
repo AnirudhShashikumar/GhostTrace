@@ -29,6 +29,9 @@ class WorkstationAPITests(unittest.TestCase):
             def serve_forever(self):
                 pass
 
+            def server_close(self):
+                pass
+
         with patch("ghosttrace.server.ThreadingHTTPServer", InProcessServer), redirect_stdout(io.StringIO()):
             serve(cls.engine)
         cls.handler = handlers[0]
@@ -88,6 +91,12 @@ class WorkstationAPITests(unittest.TestCase):
         status, _, body = self.get("/api/evidence/evidence_999999")
         self.assertEqual(status, 404)
         self.assertEqual(json.loads(body)["error"], "Evidence not found")
+
+    def test_unknown_and_private_paths_return_404(self):
+        for path in ("/api/unknown", "/api/cases/case_999999", "/.env", "/log.txt", "/REDESIGN.md", "/%2e%2e/AGENTS.md", "/missing.js"):
+            status, headers, _ = self.get(path)
+            self.assertEqual(status, 404, path)
+            self.assertEqual(headers["X-Content-Type-Options"], "nosniff")
 
     def test_styles_and_theme_bootstrap_are_served_under_the_existing_csp(self):
         for path, mime in (("/halloween.css", "text/css"), ("/theme.js", "text/javascript")):

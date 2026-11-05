@@ -1,0 +1,17 @@
+.git/
+node_modules/
+.ghosttrace-cache/
+.ghosttrace-build-*/
+.venv/
+venv/
+**/__pycache__/
+**/*.pyc
+.env
+.env.*
+log.txt
+code.zip
+output.csv
+dist/
+build/
+coverage/
+.DS_Store

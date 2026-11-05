@@ -24,3 +24,6 @@ output.csv
 !dataset/evidence/logs/
 !dataset/evidence/logs/*.log
 
+.vercel/
+.ghosttrace-build-*/
+npm-debug.log*

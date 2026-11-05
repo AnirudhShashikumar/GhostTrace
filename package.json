@@ -1,0 +1,27 @@
+{
+  "name": "ghosttrace",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Evidence-grounded deletion audit engine and read-only workstation",
+  "engines": {
+    "node": "24.x"
+  },
+  "scripts": {
+    "build": "python3 code/build_site.py",
+    "dev": "python3 code/main.py serve",
+    "preview": "python3 code/preview_site.py",
+    "lint": "node code/tests/check_ui.cjs",
+    "test:ui": "node --test code/tests/ui.test.cjs",
+    "test:python": "python3 -m unittest discover -s code/tests -v",
+    "test": "npm run test:python && npm run test:ui",
+    "check": "npm run lint && npm test && npm run build"
+  },
+  "devDependencies": {
+    "css-tree": "3.2.1",
+    "eslint": "10.14.0",
+    "jsdom": "29.1.1"
+  },
+  "overrides": {
+    "minimatch": "11.0.1"
+  }
+}
