@@ -16,6 +16,8 @@ The earlier frozen upstream submission remains available from the public [`submi
 | `output.csv` | **[Download 518-row prediction file](https://github.com/CodeBluze/GhostTrace/releases/download/submission-v1.0.0/output.csv)** | Final answers, sorted by `case_id` |
 | `log.txt` | **[Download AI chat transcript](https://github.com/CodeBluze/GhostTrace/releases/download/submission-v1.0.0/log.txt)** | Required development conversation log |
 
+GitHub redirects these downloads to `release-assets.githubusercontent.com`. If the release page opens but the files time out, try a network that can reach that host. To get artifacts from this checkout without the download host, follow [Run the production audit](#run-the-production-audit) to generate `output.csv` and `code.zip`; the current transcript is already in `log.txt`. These local artifacts are separate from the frozen upstream release.
+
 GitHub is a convenient mirror for reviewers. The official submission must still be uploaded through the [HackerRank challenge page](https://www.hackerrank.com/contests/hackerrank-orchestrate-october26/challenges/ghost-data-still-exists).
 
 ## What ships

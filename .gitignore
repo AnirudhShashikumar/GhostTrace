@@ -19,6 +19,7 @@ htmlcov/
 tmp/
 code.zip
 output.csv
+!/output.csv
 *.log
 !log.txt
 !dataset/evidence/logs/
