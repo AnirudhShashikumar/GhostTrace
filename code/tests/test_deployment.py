@@ -9,10 +9,13 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from build_site import build, verified_extractions
 from ghosttrace.deployment_config import vercel_config
+from ghosttrace.evidence import EvidenceIndex
 from preview_site import handler_for, resolve_route
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -112,3 +115,24 @@ class DeploymentTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "unowned"):
                 build(root)
             self.assertEqual((root / "dist" / "keep.txt").read_text(), "user content")
+
+
+class ExtractionCacheTests(unittest.TestCase):
+    def test_replacing_an_artifact_invalidates_its_previous_extraction(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "evidence.png"
+            source.write_bytes(b"first source")
+            index = object.__new__(EvidenceIndex)
+            index.cache_dir = root / "cache"
+            index.extraction_warnings = []
+            evidence = SimpleNamespace(file_id="evidence_test")
+            with patch("ghosttrace.evidence.shutil.which", return_value="/tool"), patch("ghosttrace.evidence.subprocess.run") as run:
+                run.return_value = SimpleNamespace(stdout="first extracted text")
+                self.assertEqual(index._text_for(source, evidence), "first extracted text")
+                self.assertEqual(index._text_for(source, evidence), "first extracted text")
+                self.assertEqual(run.call_count, 1)
+                source.write_bytes(b"replacement source")
+                run.return_value = SimpleNamespace(stdout="replacement extracted text")
+                self.assertEqual(index._text_for(source, evidence), "replacement extracted text")
+                self.assertEqual(run.call_count, 2)

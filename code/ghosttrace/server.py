@@ -13,7 +13,7 @@ from .http_security import SECURITY_HEADERS
 from .workstation import Workstation
 
 UI_DIR = Path(__file__).resolve().parents[1] / "ui"
-UI_ASSETS = {"index.html", "app.js", "theme.js", "styles.css", "halloween.css", "404.html", "error.css"}
+UI_ASSETS = {"index.html", "app.js", "theme.js", "styles.css", "halloween.css", "404.html", "error.css", "favicon.svg"}
 
 
 def serve(engine: GhostTraceEngine, host: str = "127.0.0.1", port: int = 8787) -> None:

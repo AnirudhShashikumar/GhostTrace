@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import json
 import re
 import shutil
@@ -326,6 +327,11 @@ def _infer_state(category: str, record: dict[str, Any], text: str = "") -> str:
     return "PRESENT"
 
 
+def text_cache_name(file_id: str, source: Path) -> str:
+    """An artifact replacement must never reuse extraction from older bytes."""
+    return f"{file_id}-{hashlib.sha256(source.read_bytes()).hexdigest()}.txt"
+
+
 class EvidenceIndex:
     def __init__(self, dataset_dir: Path, cache_dir: Path | None = None):
         self.dataset_dir = dataset_dir
@@ -498,7 +504,7 @@ class EvidenceIndex:
     def _text_for(self, path: Path, evidence: EvidenceFile) -> str:
         if path.suffix.casefold() in {".log", ".txt"}:
             return path.read_text(encoding="utf-8", errors="replace")
-        cache_path = self.cache_dir / f"{evidence.file_id}.txt" if self.cache_dir else None
+        cache_path = self.cache_dir / text_cache_name(evidence.file_id, path) if self.cache_dir else None
         if cache_path and cache_path.exists():
             return cache_path.read_text(encoding="utf-8")
         if path.suffix.casefold() == ".pdf" and shutil.which("pdftotext"):

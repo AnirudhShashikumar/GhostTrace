@@ -11,6 +11,7 @@ from pathlib import Path
 
 from ghosttrace.deployment_config import vercel_config
 from ghosttrace.engine import GhostTraceEngine
+from ghosttrace.evidence import text_cache_name
 from ghosttrace.server import UI_ASSETS
 from ghosttrace.validation import validate_output
 from ghosttrace.workstation import Workstation
@@ -49,7 +50,7 @@ def verified_extractions(dataset: Path, source: Path, cache: Path) -> None:
                 raise ValueError(f"Unverified extraction for {file_id}; run code/prepare_deployment.py with native extractors")
             if not file_id.replace("_", "").isalnum():
                 raise ValueError("Invalid evidence ID")
-            (cache / f"{file_id}.txt").write_text(text, encoding="utf-8")
+            (cache / text_cache_name(file_id, target)).write_text(text, encoding="utf-8")
     if expected != set(artifacts):
         raise ValueError("Extraction artifact set does not match the participant manifest")
 
