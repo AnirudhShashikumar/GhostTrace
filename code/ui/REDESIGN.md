@@ -1,5 +1,7 @@
 # Halloween dark theme implementation and validation
 
+This report records the earlier dark-theme redesign. For the subsequent production build, deployment audit, and current test totals, see [PRODUCTION_READINESS.md](../../PRODUCTION_READINESS.md).
+
 The supplied 2560 × 2048 screenshot guided the dark-theme reconstruction. The original `styles.css` is byte-for-byte unchanged. New theme-specific presentation is isolated in `halloween.css`; the existing HTML, data-loading, theme preference, and Python server remain in use. There is no React, TypeScript, framework build, or second theme provider in this repository.
 
 ## Design tokens
