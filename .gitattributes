@@ -1,0 +1,4 @@
+# AGENTS.md requires the transcript to preserve user prompts verbatim and append only.
+# Their trailing spaces/tabs are intentional content, not source-code whitespace errors.
+# Keep other whitespace checks (including source-file checks) enabled.
+log.txt whitespace=-blank-at-eol

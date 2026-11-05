@@ -2975,3 +2975,7 @@ branch=main
 repo_root=/Users/anirudhshashikumar/Documents/Projects/GhostTrace_2/GhostTrace-main
 worktree=/Users/anirudhshashikumar/Documents/Projects/GhostTrace_2/GhostTrace-main
 parent_agent=none
+
+Audit completion addendum:
+* Preserved the pasted request's intentional trailing table tabs in the append-only transcript. Added .gitattributes with log.txt whitespace=-blank-at-eol only; source-file whitespace and all security checks remain enabled.
+* Documented the transcript-specific rule in PRODUCTION_READINESS.md. Final git diff --check and git diff --cached --check pass.

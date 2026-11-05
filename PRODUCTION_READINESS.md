@@ -65,6 +65,7 @@ Native image/PDF extraction runs when refreshing `deployment/evidence-text.json`
 - Existing origin: `https://github.com/AnirudhShashikumar/GhostTrace.git`.
 - The tree was clean at audit start (`3458c77`). Other Git activity advanced HEAD during the audit; this agent ran no commit, push, reset, or history-rewrite command.
 - Changes are prepared for review. `git diff --check` passes. Local ignore rules cover environment secrets, npm modules, extraction caches, `dist`, Vercel linkage, bytecode, and archives.
+- The required append-only transcript preserves the user’s trailing table tabs verbatim. `.gitattributes` disables only end-of-line whitespace complaints for `log.txt`; source-code whitespace checks and all security gates remain enabled. [Git whitespace attributes](https://git-scm.com/docs/gitattributes)
 - No tracked cache/environment/build files or tracked files larger than 5 MiB were found. The deployment build excludes transcripts, source documentation, caches and environment files from its served output.
 - README setup/build/deploy documentation and sanitized `.env.example` are present. No existing LICENSE was supplied; no license grant was invented.
 - Remote authentication, branch protections, repository settings, GitHub secret-scanning configuration, and the new remote Actions run are **NOT RUN**.
@@ -73,7 +74,7 @@ Files introduced or modified during this audit (some were committed by other Git
 
 | Area | Files |
 | --- | --- |
-| Tooling/config | `package.json`, `package-lock.json`, `.nvmrc`, `.env.example`, `.gitignore`, `.vercelignore`, `vercel.json`, `.github/workflows/ci.yml` |
+| Tooling/config | `package.json`, `package-lock.json`, `.nvmrc`, `.env.example`, `.gitignore`, `.gitattributes`, `.vercelignore`, `vercel.json`, `.github/workflows/ci.yml` |
 | Build | `code/prepare_deployment.py`, `code/build_site.py`, `code/preview_site.py`, `deployment/evidence-text.json` |
 | Shared API/security | `code/ghosttrace/workstation.py`, `code/ghosttrace/http_security.py`, `code/ghosttrace/deployment_config.py`, `code/ghosttrace/server.py` |
 | Cache correctness | `code/ghosttrace/evidence.py` |
@@ -129,7 +130,7 @@ git diff
 Stage the reviewed release files without staging ignored artifacts:
 
 ```bash
-git add -- .github/workflows/ci.yml .gitignore .vercelignore .env.example .nvmrc \
+git add -- .github/workflows/ci.yml .gitignore .gitattributes .vercelignore .env.example .nvmrc \
   package.json package-lock.json vercel.json README.md PRODUCTION_READINESS.md \
   code/build_site.py code/prepare_deployment.py code/preview_site.py \
   code/ghosttrace/deployment_config.py code/ghosttrace/http_security.py \
