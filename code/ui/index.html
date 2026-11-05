@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="description" content="GhostTrace evidence-grounded deletion audit workstation" />
+    <title>GhostTrace — Deletion Assurance</title>
+    <script src="/theme.js"></script>
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/halloween.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="GhostTrace home">
+        <span class="brand-mark" aria-hidden="true"><span></span><svg class="dark-only ghost-icon" viewBox="0 0 32 32"><path d="M6 27V14a10 10 0 0 1 20 0v13l-5-3-5 3-5-3-5 3Z"/><circle cx="12" cy="14" r="1"/><circle cx="20" cy="14" r="1"/><path d="m13 20 3-2 3 2"/></svg></span>
+        <span><strong>GhostTrace <b class="dark-only version-badge">v1.0</b></strong><small><span class="light-only">Deletion assurance</span><span class="dark-only">DELETION ASSURANCE ENGINE</span></small></span>
+      </a>
+      <span class="dark-only event-badge" aria-label="Halloween event decoration"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 8c-5-5-13 2-12 10s6 12 12 10c6 2 11-2 12-10S21 3 16 8Zm0 0c-2-5 2-6 3-5M8 17l4-5 2 6Zm10 1 2-6 4 5ZM8 22l4 2 4-2 4 2 4-2-4 4h-8Z"/></svg> ALL-HALLOWS<br> OPS</span>
+      <div class="topbar-center" aria-label="Environment">
+        <span class="environment-dot"></span>
+        <span class="light-only">Participant evidence · point-in-time mode</span><span class="dark-only">PUBLIC PARTICIPANT SNAPSHOT<br><b>READ-ONLY</b></span>
+      </div>
+      <div class="dark-only sweep-badge"><span class="orange-dot"></span><span>SPECTRAL SWEEP<br>HALLOWEEN THEME</span><span class="sweep-note">Decorative<br>Edition · 04</span></div>
+      <div class="topbar-actions">
+        <button class="icon-button" id="themeButton" aria-label="Toggle theme" title="Toggle theme">◐</button>
+        <a class="dark-only export-button" id="exportCsv" href="/api/export.csv" download="output.csv"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 1h5l3 3v11H4ZM9 1v4h3M6 8h4M6 11h4"/></svg> Export<br> CSV</a>
+        <button class="dark-only export-button primary" id="exportDossier" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 1h5l3 3v11H4ZM9 1v4h3M6 8h4M6 11h4"/></svg> Export<br> Dossier</button>
+        <span class="engine-badge"><span></span><span class="light-only engine-label">Engine ready</span><span class="dark-only" id="snapshotState">Loading<br>snapshot</span></span>
+      </div>
+    </header>
+
+    <main class="app-shell">
+      <aside class="case-rail" aria-label="Audit cases">
+        <div class="rail-heading">
+          <div><span class="eyebrow">Investigation queue</span><h1>Deletion audits</h1></div>
+          <span class="count" id="caseCount">—</span>
+        </div>
+        <label class="search-box">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"></circle><path d="m13 13 4 4"></path></svg>
+          <input id="caseSearch" type="search" placeholder="Case, email, or user" autocomplete="off" />
+          <kbd>/</kbd>
+        </label>
+        <div class="segments" id="statusFilters" role="group" aria-label="Filter by status">
+          <button class="active" data-status="" aria-pressed="true">All</button>
+          <button data-status="INCOMPLETE" aria-pressed="false">Open</button>
+          <button data-status="COMPLETE" aria-pressed="false">Clear</button>
+          <button data-status="NOT_APPLICABLE" aria-pressed="false">N/A</button>
+        </div>
+        <div class="case-list" id="caseList" aria-live="polite"></div>
+      </aside>
+
+      <section class="workspace">
+        <div class="workspace-scroll">
+          <section class="hero-panel">
+            <div>
+              <span class="eyebrow" id="caseEyebrow">Select an audit</span>
+              <h2 id="caseTitle">Evidence, not workflow claims.</h2>
+              <p class="dark-only" id="caseDarkSubtitle"></p>
+              <p class="light-only" id="caseSubtitle">Choose a case to reconstruct identity lineage and the true state at its audit cutoff.</p>
+            </div>
+            <div class="verdict-wrap" id="verdictWrap" hidden>
+              <span class="verdict-label">Grounded verdict</span>
+              <span class="verdict" id="verdict">—</span>
+            </div>
+          </section>
+
+          <section class="metrics-band" id="metricsBand">
+            <article><span>Total cases</span><strong id="metricTotal">—</strong><small>evaluation requests</small></article>
+            <article><span>Incomplete</span><strong id="metricIncomplete">—</strong><small>requires action</small></article>
+            <article><span>Evidence</span><strong id="metricEvidence">—</strong><small>source artifacts</small></article>
+            <article><span>Observations</span><strong id="metricObservations">—</strong><small>normalized states</small></article>
+          </section>
+
+          <section class="panel graph-panel">
+            <div class="panel-heading">
+              <div><span class="eyebrow">Identity-to-resource graph</span><h3>Evidence topology</h3></div>
+              <div class="legend"><span><i class="subject"></i>Subject</span><span><i class="compliant"></i>Compliant</span><span><i class="risk"></i>Risk</span><span class="dark-only seasonal-legend" title="Decorative Halloween accent; not an evidence classification"><i></i>Halloween accent</span></div>
+            </div>
+            <div class="graph-stage" id="graphStage">
+              <div class="empty-state"><span class="empty-orbit"></span><strong>No case selected</strong><p>Resource relationships will appear here.</p></div>
+            </div>
+          </section>
+
+          <section class="panel proof-panel dark-only" aria-labelledby="proofTitle">
+            <div class="panel-heading"><div><span class="eyebrow">Source → identity → policy → decision</span><h3 id="proofTitle">Proof Ledger</h3></div><span class="coverage-badge" id="proofCoverage">No case selected</span></div>
+            <div class="proof-scroll" tabindex="0" aria-label="Scrollable proof ledger"><table class="proof-table"><thead><tr><th>Resource ID</th><th>Target identity</th><th>Enforced policy</th><th>Discovered status</th><th>Verdict</th></tr></thead><tbody id="proofRows"></tbody></table></div>
+          </section>
+
+          <section class="panel sequence-panel">
+            <div class="panel-heading">
+              <div><span class="eyebrow">Canonical execution order</span><h3>Audit sequence</h3></div>
+              <span class="mono-meta" id="stepCount">0 steps</span>
+            </div>
+            <div class="steps" id="steps"><p class="muted-placeholder">Select a case to inspect findings, remediation, and verification.</p></div>
+          </section>
+        </div>
+      </section>
+
+      <aside class="inspector" aria-label="Case inspector">
+        <div class="inspector-section">
+          <div class="section-row"><span class="eyebrow">Case context</span><i class="dark-only context-dot" aria-hidden="true"></i></div>
+          <dl class="detail-list" id="caseDetails">
+            <div><dt>Audit cutoff</dt><dd>—</dd></div>
+            <div><dt>Reported state</dt><dd>—</dd></div>
+            <div><dt>Resolved subject</dt><dd>—</dd></div>
+            <div><dt>Confidence</dt><dd>—</dd></div>
+          </dl>
+        </div>
+        <div class="inspector-section">
+          <span class="eyebrow">Request language</span>
+          <div class="request-card"><blockquote id="requestText">Select a case to view the original request.</blockquote><div class="dark-only residue-callout"><span aria-hidden="true">⊕</span><span>Phantasm Residuals<br>Halloween decoration</span><span class="orange-label">DEMO<br>ONLY</span></div></div>
+        </div>
+        <div class="inspector-section dark-only seasonal-section">
+          <section class="seasonal-card" aria-label="Halloween decorative card">
+            <header><span class="eyebrow">● Spectral entity</span><span class="orange-label">THEME ONLY</span></header>
+            <div class="seasonal-inner"><svg class="pumpkin-icon" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 16c-6-8-22-1-24 14-3 18 9 27 24 26 15 1 27-8 24-26-2-15-18-22-24-14Z"/><path d="M31 16c-3-10 4-12 6-9M18 34l7-10 4 12Zm18 2 4-12 7 10ZM17 42l8 4 7-3 7 3 8-4-7 10H25Z"/></svg><div><strong>SPECTRAL JACK-O’-LANTERN</strong><p>All-Hallows · 10.31</p><small>Decoration · no audit impact</small></div></div>
+          </section>
+        </div>
+        <div class="inspector-section">
+          <div class="section-row"><span class="eyebrow">Evidence ledger</span><span id="observationCount">0</span></div>
+          <div class="evidence-list" id="evidenceList"><p class="muted-placeholder">No observations loaded.</p></div>
+        </div>
+        <div class="inspector-section warnings-section" id="warningsSection" hidden>
+          <span class="eyebrow">Uncertainty ledger</span>
+          <div id="warningList"></div>
+        </div>
+        <div class="dark-only inspector-footer"><span class="context-dot"></span><span id="inspectorStatus">Waiting for snapshot</span><button id="refreshCase">Refresh</button></div>
+      </aside>
+    </main>
+    <dialog id="evidenceDialog" aria-labelledby="evidenceDialogTitle"><div class="dialog-heading"><div><span class="eyebrow">Participant-visible evidence</span><h3 id="evidenceDialogTitle">Evidence</h3></div><button class="icon-button" id="closeEvidence" aria-label="Close evidence details">×</button></div><div id="evidenceDialogBody"></div></dialog>
+    <div class="sr-only" id="actionStatus" role="status"></div>
+    <script src="/app.js" defer></script>
+  </body>
+</html>
+
