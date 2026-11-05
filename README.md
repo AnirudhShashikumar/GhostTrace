@@ -6,19 +6,17 @@ Two modes share the same audit engine and UI: the local Python workstation and a
 
 The submission is a complete local application: a deterministic audit engine, multi-format evidence pipeline, strict output validator, evaluation harness, submission packager, and a responsive investigation workstation inspired by DepthWizard and VeilGraph's restrained scientific design language.
 
-## Earlier upstream challenge release
+## Submission files
 
-The earlier frozen upstream submission remains available from the public [`submission-v1.0.0` GitHub Release](https://github.com/CodeBluze/GhostTrace/releases/tag/submission-v1.0.0). Those artifacts predate the Vercel build and release-readiness changes in this checkout. Use the commands below to build the current version.
-
-| Required artifact | One-click download | Purpose |
+| Artifact | Where to get it | Contents |
 | --- | --- | --- |
-| `code.zip` | **[Download runnable solution](https://github.com/CodeBluze/GhostTrace/releases/download/submission-v1.0.0/code.zip)** | Code, prompts, configuration, README, and both required evaluation reports |
-| `output.csv` | **[Download 518-row prediction file](https://github.com/CodeBluze/GhostTrace/releases/download/submission-v1.0.0/output.csv)** | Final answers, sorted by `case_id` |
-| `log.txt` | **[Download AI chat transcript](https://github.com/CodeBluze/GhostTrace/releases/download/submission-v1.0.0/log.txt)** | Required development conversation log |
+| `code.zip` | [Build the submission archive](#submission-and-verification) | Runnable solution, README, and both required evaluation reports |
+| `output.csv` | [Open the prediction file](output.csv) | Final answers for all 518 cases, sorted by `case_id` |
+| `log.txt` | [Open the development transcript](log.txt) | Required development conversation log |
 
-GitHub redirects these downloads to `release-assets.githubusercontent.com`. If the release page opens but the files time out, try a network that can reach that host. To get artifacts from this checkout without the download host, follow [Run the production audit](#run-the-production-audit) to generate `output.csv` and `code.zip`; the current transcript is already in `log.txt`. These local artifacts are separate from the frozen upstream release.
+To save `output.csv` or `log.txt`, open the file on GitHub and click **Download raw file** in the toolbar above its contents.
 
-GitHub is a convenient mirror for reviewers. The official submission must still be uploaded through the [HackerRank challenge page](https://www.hackerrank.com/contests/hackerrank-orchestrate-october26/challenges/ghost-data-still-exists).
+Submit the files through the [HackerRank challenge page](https://www.hackerrank.com/contests/hackerrank-orchestrate-october26/challenges/ghost-data-still-exists). HackerRank may prompt you to sign in.
 
 ## What ships
 
@@ -89,12 +87,9 @@ python3 -m unittest discover -s code/tests -v
 
 # Evaluate against the participant-visible sample
 python3 code/evaluation/main.py
-
-# Build the dataset-free submission archive
-python3 code/package_submission.py
 ```
 
-Then open [http://127.0.0.1:8787](http://127.0.0.1:8787). The UI and API are served by the Python standard library; no frontend toolchain or separate service is required.
+After starting the workstation with `serve`, open `http://127.0.0.1:8787` in your browser. The UI and API are served by the Python standard library; no frontend toolchain or separate service is required.
 
 ## Decision pipeline
 
@@ -171,11 +166,15 @@ See [`problem_statement.md`](problem_statement.md) for the official participant 
 
 ## Submission and verification
 
-Build `code.zip` with `python3 code/package_submission.py`, submit the root `output.csv`, and upload `log.txt` as the chat transcript. The archive includes the required reports at the exact paths `evaluation/evaluation_report.md` and `evaluation/usage_report.md`; their source-of-truth copies remain beside the evaluator under `code/evaluation/`.
+To build `code.zip` for this version, run the packager from the repository root:
 
-For reproducibility, compare downloaded files with the SHA-256 checksums published in the [`submission-v1.0.0` release notes](https://github.com/CodeBluze/GhostTrace/releases/tag/submission-v1.0.0). The authoritative upload destination is:
+```bash
+python3 code/package_submission.py
+```
 
-https://www.hackerrank.com/contests/hackerrank-orchestrate-october26/challenges/ghost-data-still-exists
+The command writes `code.zip` at the repository root. It excludes the dataset and includes the required reports at `evaluation/evaluation_report.md` and `evaluation/usage_report.md`. Submit it with the root `output.csv` and `log.txt`.
+
+The [upstream `submission-v1.0.0` release](https://github.com/CodeBluze/GhostTrace/releases/tag/submission-v1.0.0) archives an earlier version and lists checksums for its own files.
 
 ## Halloween dark theme
 
@@ -204,7 +203,7 @@ npm run build
 npm run preview
 ```
 
-The preview runs at [http://127.0.0.1:8789](http://127.0.0.1:8789). The build produces an allowlisted `dist/` with all 518 case payloads, the validated CSV, 94 downloadable evidence artifacts, the existing UI, and a 404 page. No application secrets or environment variables are required. A missing or changed extraction source/hash stops the build instead of silently reducing coverage.
+After starting the preview, open `http://127.0.0.1:8789` in your browser. The build produces an allowlisted `dist/` with all 518 case payloads, the validated CSV, 94 downloadable evidence artifacts, the existing UI, and a 404 page. No application secrets or environment variables are required. A missing or changed extraction source/hash stops the build instead of silently reducing coverage.
 
 When participant evidence changes, regenerate its extraction inputs using the native tools, review the source-derived text and hashes, then rebuild:
 

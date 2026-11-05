@@ -3072,3 +3072,25 @@ branch=main
 repo_root=/Users/anirudhshashikumar/Documents/Projects/GhostTrace_2/GhostTrace-main
 worktree=/Users/anirudhshashikumar/Documents/Projects/GhostTrace_2/GhostTrace-main
 parent_agent=none
+
+## [2026-11-05T05:26:59+00:00] Verify and fix the GitHub README links
+
+User Prompt (verbatim, secrets redacted):
+make sure all the links in the github readme file work properly
+
+Agent Response Summary:
+Verified the published repository files, historical release page, and HackerRank destination. Replaced upstream asset links whose redirect host timed out with GitHub file views for the CSV and transcript and a local build link for the current ZIP. Checked all ten final README links, compared the downloaded file bytes with origin/main, and built and verified the archive. The README edit is local; HackerRank redirected to sign-in.
+
+Actions:
+* Checked public URLs and downloadable file contents.
+* Edited README.md.
+* Ran the submission packager and verified the ZIP contents.
+* Ran git diff --check.
+
+Context:
+tool=Codex Desktop
+model=gpt-6.1-sol
+branch=main
+repo_root=/Users/anirudhshashikumar/Documents/Projects/GhostTrace_2/GhostTrace-main
+worktree=main
+parent_agent=none
