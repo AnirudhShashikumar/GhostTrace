@@ -18,6 +18,7 @@ coverage/
 htmlcov/
 tmp/
 code.zip
+!/code.zip
 output.csv
 !/output.csv
 *.log

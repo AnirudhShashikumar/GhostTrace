@@ -10,7 +10,7 @@ Command:
 python3 code/evaluation/main.py
 ```
 
-Environment: Python 3.14.6, deterministic local execution, 32 public sample cases, 518 full-dataset cases, 94 evidence files, and 2,984 extracted observations. Extraction completed with zero adapter warnings in the measured environment.
+Environment: Python 3.12.13, deterministic local execution, 32 public sample cases, 518 full-dataset cases, 94 evidence files, and 2,984 extracted observations. Extraction completed with zero adapter warnings in the measured environment.
 
 ## Public-sample metrics
 
@@ -18,6 +18,7 @@ Environment: Python 3.14.6, deterministic local execution, 32 public sample case
 | --- | --- | ---: |
 | Case accuracy | Correct `deletion_status` | 32/32 = **100.000%** |
 | Row accuracy | Status and complete ordered step array exactly match | 16/32 = **50.000%** |
+| Step accuracy | All seven fields match at the same position; missing or extra steps count as misses | **72.680%** |
 | Field accuracy | Micro accuracy across seven aligned step fields; missing/extra steps count as seven misses | **80.118%** |
 | Sequence accuracy | Exact ordered `(phase, system, resource, operation, state)` sequence | 16/32 = **50.000%** |
 | Step precision | Exact predicted step objects also present in target | **81.034%** |
@@ -97,4 +98,4 @@ python3 code/main.py run
 python3 code/main.py validate
 ```
 
-Final regression result: **29/29 tests pass**. The suite includes manifest-completeness, extraction-health, temporal-safety, trace-dialect, dynamic-policy, full-plan, alias-validity, invariant-assignment, independent-attribution, and byte-reproducible packaging gates so a checkout cannot silently omit evidence, accept an unsupported mapping, or emit a timestamp-dependent submission archive.
+The current Python regression suite passes all **44 tests**. It checks manifest completeness, extraction health, cutoff enforcement, trace parsing, policy handling, plan validation, identity and resource links, and archive reproducibility.

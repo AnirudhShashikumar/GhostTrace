@@ -27,4 +27,4 @@ PDF text extraction uses the local `pdftotext` executable and image OCR uses the
 
 ## Development tooling disclosure
 
-OpenAI Codex with GPT-5 assisted during software development and review. It is not imported, invoked, or required by the submitted prediction pipeline, and it made zero calls during the measured final full-dataset execution. Development-assistant token telemetry was not exposed to the repository runtime and is therefore not presented as fabricated usage data.
+OpenAI Codex assisted during development and review. The measured full-dataset run used zero development-assistant calls. The usage totals above cover prediction runtime only.

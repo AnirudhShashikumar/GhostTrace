@@ -28,6 +28,8 @@ def main() -> int:
     status_hits = 0
     exact_hits = 0
     operation_sequence_hits = 0
+    aligned_step_hits = 0
+    aligned_step_total = 0
     step_field_hits = 0
     step_field_total = 0
     expected_steps = predicted_steps = matched_steps = 0
@@ -53,6 +55,8 @@ def main() -> int:
         for index in range(max(len(target_steps), len(actual_steps))):
             expected_step = target_steps[index] if index < len(target_steps) else {}
             actual_step = actual_steps[index] if index < len(actual_steps) else {}
+            aligned_step_hits += expected_step == actual_step
+            aligned_step_total += 1
             step_field_hits += sum(expected_step.get(field) == actual_step.get(field) for field in field_names)
             step_field_total += len(field_names)
         expected_steps += len(target_steps)
@@ -73,6 +77,7 @@ def main() -> int:
         "cases": len(expected),
         "case_status_accuracy": status_hits / len(expected),
         "exact_row_accuracy": exact_hits / len(expected),
+        "aligned_step_accuracy": aligned_step_hits / aligned_step_total if aligned_step_total else 1.0,
         "step_field_accuracy": step_field_hits / step_field_total if step_field_total else 1.0,
         "operation_sequence_accuracy": operation_sequence_hits / len(expected),
         "exact_sequence_accuracy": exact_hits / len(expected),

@@ -10,13 +10,17 @@ The submission is a complete local application: a deterministic audit engine, mu
 
 | Artifact | Where to get it | Contents |
 | --- | --- | --- |
-| `code.zip` | [Build the submission archive](#submission-and-verification) | Runnable solution, README, and both required evaluation reports |
-| `output.csv` | [Open the prediction file](output.csv) | Final answers for all 518 cases, sorted by `case_id` |
-| `log.txt` | [Open the development transcript](log.txt) | Required development conversation log |
+| `code.zip` | [Submission archive](code.zip) | Runnable solution, README, and both required evaluation reports |
+| `output.csv` | [Prediction file](output.csv) | Exactly 518 answer rows, sorted by `case_id` |
+| `chat_transcript` | [Development transcript (log.txt)](log.txt) | Conversation log recorded by the coding agent |
+| AI interview | [Interview preparation](#ai-interview) | Approach, system design, evaluation, and limitations |
 
-To save `output.csv` or `log.txt`, open the file on GitHub and click **Download raw file** in the toolbar above its contents.
+Open any of the three file links on GitHub and click **Download raw file**. The two reports are also available to read directly:
 
-Submit the files through the [HackerRank challenge page](https://www.hackerrank.com/contests/hackerrank-orchestrate-october26/challenges/ghost-data-still-exists). HackerRank may prompt you to sign in.
+- [Evaluation report](code/evaluation/evaluation_report.md) covers case, step, field, and sequence accuracy, additional test cases, and fixes.
+- [Usage report](code/evaluation/usage_report.md) covers model calls, tokens, and cost for the full run.
+
+Upload the three files and complete the AI interview through the [HackerRank challenge page](https://www.hackerrank.com/contests/hackerrank-orchestrate-october26/challenges/ghost-data-still-exists). HackerRank may prompt you to sign in.
 
 ## What ships
 
@@ -172,9 +176,23 @@ To build `code.zip` for this version, run the packager from the repository root:
 python3 code/package_submission.py
 ```
 
-The command writes `code.zip` at the repository root. It excludes the dataset and includes the required reports at `evaluation/evaluation_report.md` and `evaluation/usage_report.md`. Submit it with the root `output.csv` and `log.txt`.
+The command writes `code.zip` at the repository root. It includes the required reports at `evaluation/evaluation_report.md` and `evaluation/usage_report.md` and excludes the dataset and nested archives. Runtime decisions use the packaged [intent rules](code/ghosttrace/intent.py) and the challenge's `deletion_rules.csv`. The deterministic runner has no model prompt files or API key setup.
+
+To run from the extracted archive, install the tools under [Requirements](#requirements) and point the CLI to the supplied participant dataset directory:
+
+```bash
+python3 code/main.py run --dataset /path/to/dataset
+python3 code/main.py validate --dataset /path/to/dataset
+```
 
 The [upstream `submission-v1.0.0` release](https://github.com/CodeBluze/GhostTrace/releases/tag/submission-v1.0.0) archives an earlier version and lists checksums for its own files.
+
+## AI interview
+
+- Check deletion intent, resolve historical identifiers, and reconstruct the state at `audit_at`. Use independent evidence to verify workflow claims.
+- The engine indexes evidence, assigns anonymous workflow targets only when the eligible relationships agree, then applies the deletion policy and orders the findings, remediation, and verification. [Architecture](#architecture)
+- The 32 public cases give 100% status accuracy and 50% exact sequence accuracy. The full run validates 518 output rows. The main sequence gap is incomplete or ambiguous evidence linking a subject to a resource. [Evaluation report](code/evaluation/evaluation_report.md)
+- Parsing and OCR run locally. The 518-case audit used zero metered model calls or model tokens. [Usage report](code/evaluation/usage_report.md)
 
 ## Halloween dark theme
 

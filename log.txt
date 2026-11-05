@@ -3094,3 +3094,24 @@ branch=main
 repo_root=/Users/anirudhshashikumar/Documents/Projects/GhostTrace_2/GhostTrace-main
 worktree=main
 parent_agent=none
+
+## [2026-11-05T05:37:38+00:00] Verify the judging submission package and links
+
+User Prompt (verbatim, secrets redacted):
+make sure all the above required things are present in the repo and working properly, and all the links are provided in the read me file, all links must be working properly and accessible to the judging team easily
+
+Agent Response Summary:
+Made the root code.zip trackable and linked it with the predictions, development transcript, both required reports, and AI interview guidance in the README. Added a reproducible step-level accuracy measurement to the public evaluation and corrected the regression test count. The extracted archive reproduced all 518 validated rows byte for byte, and all 44 Python tests passed. Checked the README destinations and prepared the changes locally for publication after approval.
+
+Actions:
+* Edited .gitignore, README.md, the sample evaluator, and its two reports.
+* Built and verified code.zip, then ran the extracted CLI using the participant dataset.
+* Ran the Python suite and public evaluation, checked GitHub links and downloads, and prepared the Git changes.
+
+Context:
+tool=Codex Desktop
+model=gpt-6.1-sol
+branch=main
+repo_root=/Users/anirudhshashikumar/Documents/Projects/GhostTrace_2/GhostTrace-main
+worktree=main
+parent_agent=none
