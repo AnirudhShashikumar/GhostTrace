@@ -2,11 +2,13 @@
 
 GhostTrace is an evidence-grounded deletion-audit system for the HackerRank Orchestrate challenge **Ghost Data Still Exists**. It reconstructs historical identities, reads heterogeneous evidence, enforces the case-specific time cutoff, applies deletion policy, and emits a validated remediation plan for every request.
 
+Two modes share the same audit engine and UI: the local Python workstation and a finite read-only snapshot build for Vercel. The hosted build recalculates every decision from participant-facing data and verified extraction text; it does not run OCR or a persistent Python server on Vercel.
+
 The submission is a complete local application: a deterministic audit engine, multi-format evidence pipeline, strict output validator, evaluation harness, submission packager, and a responsive investigation workstation inspired by DepthWizard and VeilGraph's restrained scientific design language.
 
-## Download the verified submission
+## Earlier upstream challenge release
 
-Judges and reviewers can download the frozen submission directly from the public [`submission-v1.0.0` GitHub Release](https://github.com/CodeBluze/GhostTrace/releases/tag/submission-v1.0.0). No GitHub sign-in or repository clone is required.
+The earlier frozen upstream submission remains available from the public [`submission-v1.0.0` GitHub Release](https://github.com/CodeBluze/GhostTrace/releases/tag/submission-v1.0.0). Those artifacts predate the Vercel build and release-readiness changes in this checkout. Use the commands below to build the current version.
 
 | Required artifact | One-click download | Purpose |
 | --- | --- | --- |
@@ -52,11 +54,13 @@ The workflow's reported status is treated as a claim, never proof. GhostTrace de
 
 - Python 3.11 or later.
 - No Python package installation is required.
-- Optional but recommended system tools:
+- Native tools for a fresh full audit and the Python engine tests:
   - `pdftotext` (Poppler) for PDF evidence.
   - `tesseract` for screenshot evidence.
 
-When an optional extractor is unavailable, GhostTrace completes the run, surfaces the missing adapter in diagnostics, and never silently fabricates observations.
+Missing native extractors are reported in diagnostics; affected cases remain uncertain and may fail strict output validation. For the Vercel snapshot build, verified extraction inputs in `deployment/evidence-text.json` replace the native-tool requirement.
+
+Release tooling additionally uses Node.js 24 and npm. It has development dependencies only; neither the Python runtime nor the deployed browser needs an npm runtime package.
 
 ## Run the production audit
 
@@ -177,13 +181,42 @@ The existing theme button switches between the original light workstation and th
 
 The app still needs no frontend build or runtime packages. Start it with the existing `serve` command above; choose a free port using `--port` if necessary. For complete image/PDF evidence, install the optional `tesseract` and `pdftotext` extractors before starting the server. Extraction coverage in dark mode reports actual processed artifacts.
 
-Optional UI development checks use temporary tooling, outside the checkout:
+Install the locked development tools and run the checks from the repository root:
 
 ```bash
-npm install --prefix /tmp/ghosttrace-ui-tools --ignore-scripts --no-audit --no-fund eslint@9 css-tree@3 jsdom@26
-GHOSTTRACE_UI_TOOLS=/tmp/ghosttrace-ui-tools node code/tests/check_ui.cjs
-NODE_PATH=/tmp/ghosttrace-ui-tools/node_modules node --test code/tests/ui.test.cjs
-python3 -m unittest discover -s code/tests -p test_server.py -v
+npm ci
+npm run lint
+npm run test:ui
+# Requires Python plus tesseract/pdftotext on PATH:
+npm test
 ```
 
 The completed browser review covers 2560px, 1440px, 1280px, tablet, and mobile layouts. With the evidence extractors available, all 35 Python tests and 11 UI tests pass; the original and updated light-theme screenshots are pixel-identical at the reference viewport. See [the redesign validation report](code/ui/REDESIGN.md) for tokens, changed components, screenshots, checks, and remaining differences.
+
+
+## Production build and Vercel
+
+```bash
+npm ci
+npm run build
+npm run preview
+```
+
+The preview runs at [http://127.0.0.1:8789](http://127.0.0.1:8789). The build produces an allowlisted `dist/` with all 518 case payloads, the validated CSV, 94 downloadable evidence artifacts, the existing UI, and a 404 page. No application secrets or environment variables are required. A missing or changed extraction source/hash stops the build instead of silently reducing coverage.
+
+When participant evidence changes, regenerate its extraction inputs using the native tools, review the source-derived text and hashes, then rebuild:
+
+```bash
+python3 code/prepare_deployment.py
+npm run check
+```
+
+To deploy after review, import `AnirudhShashikumar/GhostTrace` into Vercel, use the repository root and the **Other** framework preset, select **Node.js 24.x**, and retain `vercel.json` settings: install `npm ci`, build `npm run build`, output `dist`. No application environment variables are needed. Deployment is a manual step; no Vercel deployment has been performed or verified by this audit.
+
+The hosted site is a public read-only demonstration of the fictional participant dataset. It has no authentication, database service, background worker, or mutable audit endpoint. Search and status filters run in the browser against the complete case index. Static `/api/cases` does not apply server-side query filters; the local API retains that capability. Refresh reloads the same built snapshot; changing inputs requires a new build. Real private data or continuously updated audits require an authenticated external backend and are outside this deployment target.
+
+`deployment/evidence-text.json` is an intentional, reviewed build input, not a disposable local cache. `dist/`, `node_modules/`, local extraction caches, environments, and Vercel account linkage are ignored. The full Git repository is the Vercel source; the challenge's `code.zip` deliberately omits participant data and deployment extraction inputs, and remains a separate runnable CLI submission.
+
+The development lockfile pins a `minimatch` 11.0.1 override for the published glob-pattern denial-of-service advisory affecting ESLint's dependency range. Lint and UI checks pass with the patch. Review removal of the override when ESLint supports the patched dependency directly.
+
+See [PRODUCTION_READINESS.md](PRODUCTION_READINESS.md) for the release audit, exact Git/Vercel steps, security scope, and remaining verification limits.
